@@ -45,7 +45,7 @@ const all2 = addMissingProperties<Base, Extend>(base1, {
 
 
 
-
+export type Byte = ComputeRange<256>[number]
 
 
 export type ComputeRange<

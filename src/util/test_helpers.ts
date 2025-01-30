@@ -1,4 +1,4 @@
-import { bitStringToUnsignedInteger } from "./bits_and_bytes"
+import * as modeSAdsbParser from 'mode-s-adsb-parser'
 
 export const ESCAPE_CHAR_CODE = 0x1a
 export const ESCAPE_CHAR = String.fromCharCode(ESCAPE_CHAR_CODE)
@@ -24,7 +24,7 @@ export function encodeIntBytesAsBytes(int: number, byteCount: number){
     const bytes: number[] = []
 
     for(let i = 0; i < byteCount; i++){
-        bytes[i] = bitStringToUnsignedInteger(bitString.slice(8 * i, 8 * (i+1)))
+        bytes[i] = modeSAdsbParser.util.bits_and_bytes.bitStringToUnsignedInteger(bitString.slice(8 * i, 8 * (i+1)))
     }
 
     return bytes

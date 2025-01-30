@@ -1,12 +1,13 @@
 
 // docs see https://wiki.jetvision.de/wiki/Mode-S_Beast:Data_Output_Formats
 
-import { bitStringToUnsignedIntegerSafeRangeFromBits, bytesToFullBitString } from './util/bits_and_bytes'
+import * as modeSAdsbParser from 'mode-s-adsb-parser'
 import {logError, logWarning} from './util/log'
+import {Byte} from './util/typescript'
 
-export type BeastBinaryFrame<T extends BeastBinaryFrameFormat> = {
+type BeastBinaryFrame<T extends BeastBinaryFrameFormat> = {
     format: T,
-    bytes: number[]
+    bytes: Byte[]
 }
 
 export type BeastParsedFrameType = BeastParsedFrameType_Mode_AC | BeastParsedFrameType_Mode_S_Short | BeastParsedFrameType_Mode_S_Long | BeastParsedFrameType_Debug
@@ -18,8 +19,8 @@ type BeastParsedFrameType_Debug = 'DEBUG'
 export type BeastParsedFrame<T extends BeastParsedFrameType> = {
     type: T,
     mlatTimestamp: number
-    signalLevel: number // 0-255
-    dataBytes: number[]
+    signalLevel: Byte
+    dataBytes: Byte[]
 }
 
 export function parseBeastSocketData(data: Buffer<ArrayBufferLike>, ignoreInvalid?: boolean){
@@ -108,11 +109,11 @@ export function parseBeastLine(bytes: Buffer<ArrayBufferLike>, ignoreInvalid?: b
         }
     }
 
-    let currentFrameBytes: number[] = []
+    let currentFrameBytes: Byte[] = []
     let currentFrameFormat: BeastBinaryFrameFormat
 
     for(let byteIndex = 0; byteIndex < bytes.length; byteIndex++){
-        const byte = bytes[byteIndex]
+        const byte = bytes[byteIndex] as Byte
 
         if(currentFrameBytes.length === 0 && typeof currentFrameFormat !== 'number' && byte !== ESCAPE_BYTE){
             if(ignoreInvalid){
@@ -132,7 +133,7 @@ export function parseBeastLine(bytes: Buffer<ArrayBufferLike>, ignoreInvalid?: b
                 }
             }
 
-            const nextByte = bytes[nextByteIndex]
+            const nextByte = bytes[nextByteIndex] as Byte
 
             if(nextByte === ESCAPE_BYTE){
                 currentFrameBytes.push(nextByte)
@@ -215,7 +216,7 @@ export function parseBeastLine(bytes: Buffer<ArrayBufferLike>, ignoreInvalid?: b
 export function parseBeastFrame(frame: BeastBinaryFrame<BeastBinaryFrameFormat>) : BeastParsedFrame<BeastParsedFrameType> {
 
     const dataBytes = frame.bytes.slice(7)
-    const mlatTimestamp = bitStringToUnsignedIntegerSafeRangeFromBits(bytesToFullBitString(frame.bytes.slice(0, 6)), 6*8, 'mlatTimestamp')
+    const mlatTimestamp = modeSAdsbParser.util.bits_and_bytes.bitStringToUnsignedIntegerSafeRangeFromBits(modeSAdsbParser.util.bits_and_bytes.bytesToFullBitString(frame.bytes.slice(0, 6)), 6*8, 'mlatTimestamp')
     const signalLevel = frame.bytes[6]
 
     if(frame.format < 49 || frame.format > 52){

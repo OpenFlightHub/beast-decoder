@@ -3,7 +3,6 @@ import {parseBeastSocketData} from './parse'
 export default function runExample(){
 
     const line1 = Buffer.from("GjEAAAAAAAAAAAAaMQAAAAAAAAAAABoxAAAAAAAAAAAAGjEAAAAAAAAAAAAaMQAAAAAAAAAAAA==", 'base64')
-    //const bin = bytesToBitString(line1)
 
     const line1parsedFrames = parseBeastSocketData(line1)
 
@@ -12,5 +11,4 @@ export default function runExample(){
 
     const line2parsedFrames = parseBeastSocketData(line2)
 
-    console.log('example done')
 }
