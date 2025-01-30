@@ -14,6 +14,16 @@ npm i --save adsb-beast-parser
 
 ```typescript
 TODO
+
+// parsing does minimal work and just makes sure the structure is correct
+parse()
+
+// decodeLocation will only decode the location part of the message (so you can tell wether this is an interesting packet for you, and you want to fully decode it)
+decodeLocation()
+
+
+// fully decodes the message into values that is human readable, self explanatory and uses real world units
+decode()
 ```
 
 ## Changelog
