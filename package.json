@@ -1,5 +1,5 @@
 {
-  "name": "adsb-beast-parser",
+  "name": "beast-decoder",
   "version": "0.1.0",
   "author": "OpenFlightHub <mail@openflighthub.org> (https://openflighthub.org)",
   "main": "./dist/index.js",
@@ -10,18 +10,19 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/openflighthub/adsb-beast-parser.git"
+    "url": "https://github.com/openflighthub/beast-decoder.git"
   },
   "keywords": [
     "adsb",
+    "modes",
     "beast",
     "parser"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/openflighthub/adsb-beast-parser/issues"
+    "url": "https://github.com/openflighthub/beast-decoder/issues"
   },
-  "homepage": "https://github.com/openflighthub/adsb-beast-parser",
+  "homepage": "https://github.com/openflighthub/beast-decoder",
   "scripts": {
     "build": "tsup",
     "test": "jest"

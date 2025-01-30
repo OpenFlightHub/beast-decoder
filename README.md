@@ -1,14 +1,14 @@
-# ADSB Beast Parser
-Parses messages coming from out.adsb.lol:1337 [adsb.lol](https://www.adsb.lol/docs/overview/introduction/)
+# ADSB ModeS Beast Parser
+Parses messages coming from a BEAST TCP port. For example out.adsb.lol:1337 [adsb.lol](https://www.adsb.lol/docs/overview/introduction/)
 
 ### Dependencies
 * none
 
 ## Usage
 
-[install via npm](https://www.npmjs.com/package/adsb-beast-parser):
+[install via npm](https://www.npmjs.com/package/beast-decoder):
 ```
-npm i --save adsb-beast-parser
+npm i --save beast-decoder
 ```
 
 
