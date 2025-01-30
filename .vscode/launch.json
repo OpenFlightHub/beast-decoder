@@ -1,0 +1,13 @@
+{
+    "configurations":[
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/dist/index.js",
+            "console": "internalConsole",
+            "outputCapture": "std",
+            "preLaunchTask": "${defaultBuildTask}"
+        }
+    ],
+}
