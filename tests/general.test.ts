@@ -1,10 +1,29 @@
-import {parseBeastSocketData} from "../src";
+import { decodeOnlyLocationOfBeastFrame, parseBeastSocketData} from "../src";
 import * as fs from 'fs'
 
 const messages: Buffer<ArrayBufferLike>[] = fs.readFileSync('tests/example_messages_base64.txt', 'utf-8').split('\n').filter(line => line.length > 0).map(line => Buffer.from(line, 'base64'))
 
-test('parsing', ()=>{
+test('parseBeastSocketData throws no error when ignoreInvalid = true', ()=>{
     for(const message of messages){
-        const parsed = parseBeastSocketData(message)
+        parseBeastSocketData(message, true)
     }
 })
+
+test('decodeOnlyLocationOfBeastFrame throws no error', ()=>{
+    for(const message of messages){
+        const frames = parseBeastSocketData(message, true)
+
+        for(const frame of frames){
+            decodeOnlyLocationOfBeastFrame(frame)
+        }
+    }
+})
+
+// test('decodeBeastFrame throws no error', ()=>{
+//     for(const message of messages){
+//         const frames = parseBeastSocketData(message)
+//         for(const frame of frames){
+//             decodeBeastFrame(frame)
+//         }
+//     }
+// })
