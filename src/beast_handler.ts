@@ -40,7 +40,7 @@ type AircraftCacheData = {
 
 const MAX_AIRCRAFT_CACHE_TIME = 1000 * 60 * 30 // 30 minutes
 
-export default class BeastHandler extends EventManager<BeastHandlerEvents> {
+export class BeastHandler extends EventManager<BeastHandlerEvents> {
 
     private readonly aircraftCache = new Map<AircraftIcaoAddress, AircraftCacheData>()
 

@@ -1,5 +1,5 @@
 import {parseBeastSocketData} from './parse'
-import BeastHandler from './beast_handler'
+import {BeastHandler} from './beast_handler'
 import {EXAMPLE_LINES} from './example_lines'
 
 export default function runExample(){
