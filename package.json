@@ -1,6 +1,6 @@
 {
   "name": "beast-decoder",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "OpenFlightHub <mail@openflighthub.org> (https://openflighthub.org)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

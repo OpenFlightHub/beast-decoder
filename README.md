@@ -19,8 +19,27 @@ npm i --save beast-decoder
 
 ```typescript
 
-import { parseADSB, ADSB_ParsedMessage, parseModeS, ModeS_ParsedMessage } from 'beast-decoder'
+import { BeastHandler } from 'beast-decoder'
 import net from 'net'
+
+
+const handler = new BeastHandler()
+
+handler.addListener('aircraft_new', (ac)=>{
+    console.log('new aircraft', ac)
+})
+
+handler.addListener('aircraft_update', (ac)=>{
+    console.log('updated aircraft', ac)
+})
+
+handler.addListener('aircraft_update_with_location', (ac)=>{
+    console.log('updated aircraft location', ac)
+})
+
+handler.addListener('warning', (w)=>{
+    console.warn(w.message, w.context)
+})
 
 const socket: new net.Socket()
 socket.connect({
@@ -30,27 +49,12 @@ socket.connect({
 })
 
 socket.on('data', data =>{
-
-    const frames = parseBeastSocketData(data)
-
-    for(const frame of frames){
-        if(frame.format === 'ADSB'){
-
-            // parsing does minimal work and just makes sure the structure is correct
-            const parsedAdsbMessage = parseADSB(frame.dataBytes)
-
-            // decoding only location, to keep required work small
-            const decodedLocation = decodeLocation(parsedAdsbMessage)
-
-            // if location is in our area of interest, decode the full message (into a human readable, descriptive format that uses real world units)
-            const fullyDecoded = decode(parsedAdsbMessage, decodedLocation) // we can supply the already decoded location to minimize the work
-        }
-    }
+    handler.handleBeastData(data)
 })
 ```
 
 ## Dependencies
-* none
+* [mode-s-adsb-parser](https://github.com/OpenFlightHub/mode-s-adsb-parser) (same Author as this library)
 
 ## Changelog
 
