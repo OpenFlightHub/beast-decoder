@@ -8,15 +8,17 @@ export type AircraftData = {
 
 export interface AircraftDataWithLocation extends AircraftData {
     location: {
-        //TODO
+        latitude: number
+        longitude: number
     }
 }
 
 export type BeastHandlerEvents = {
-    'aircraft': AircraftData
-    'aircraft_with_location': AircraftDataWithLocation
+    'aircraft_new': AircraftData // first time we see a message from this aircraft (aircraft not in the cache)
+    'aircraft_update': AircraftData // received message from aircraft
+    'aircraft_update_with_location': AircraftDataWithLocation // received message from aircraft and we can locate it
     'warning': {message: string, context: any}
-    'removed_from_cache': AircraftIcaoAddress
+    'removed_from_cache': AircraftIcaoAddress // no message received from this aircraft for some time
 }
 
 type AircraftIcaoAddress = string
@@ -84,7 +86,8 @@ export default class BeastHandler extends EventManager<BeastHandlerEvents> {
 
                 const myIcaoAddressHex = icaoNumberToHex(parsedModeS.icaoAddress)
 
-                const aircraft: AircraftCacheData = this.aircraftCache.get(myIcaoAddressHex) || {
+                const existingAircraft = this.aircraftCache.get(myIcaoAddressHex)
+                const aircraft: AircraftCacheData = existingAircraft || {
                     lastDataReceivedTime: Date.now()
                 }
 
@@ -117,17 +120,25 @@ export default class BeastHandler extends EventManager<BeastHandlerEvents> {
 
                         aircraft.lastUnambigiousLocation = unambigiousLocation
 
-                        this.dispatch('aircraft_with_location', {
+                        this.dispatch('aircraft_update_with_location', {
                             icaoAddress: myIcaoAddressHex,
                             location: unambigiousLocation
                         })
                     }
                 }
 
-                if(!aircraft.lastUnambigiousLocation){
-                    this.dispatch('aircraft', {
+
+
+                if(!existingAircraft){
+                    this.dispatch('aircraft_new', {
                         icaoAddress: myIcaoAddressHex
                     })
+                } else {
+                    if(!aircraft.lastUnambigiousLocation){
+                        this.dispatch('aircraft_update', {
+                            icaoAddress: myIcaoAddressHex
+                        })
+                    }
                 }
 
             } catch (err){
@@ -142,14 +153,22 @@ export default class BeastHandler extends EventManager<BeastHandlerEvents> {
 
                 const myIcaoAddressHex = icaoNumberToHex(parsedModeS.icaoAddress)
 
-                const aircraft: AircraftCacheData = this.aircraftCache.get(myIcaoAddressHex) || {
+                const existingAircraft = this.aircraftCache.get(myIcaoAddressHex)
+                const aircraft: AircraftCacheData = existingAircraft || {
                     lastDataReceivedTime: Date.now()
                 }
 
                 this.aircraftCache.set(myIcaoAddressHex, aircraft)
-                this.dispatch('aircraft', {
-                    icaoAddress: myIcaoAddressHex
-                })
+
+                if(existingAircraft){
+                    this.dispatch('aircraft_update', {
+                        icaoAddress: myIcaoAddressHex
+                    })
+                } else {
+                    this.dispatch('aircraft_new', {
+                        icaoAddress: myIcaoAddressHex
+                    })
+                }
 
             } catch (err){
                 this.dispatch('warning', {

@@ -20,12 +20,12 @@ function singleDataExample(){
 function handlerExample(){
     const handler = new BeastHandler()
 
-    handler.addListener('aircraft', (ac)=>{
-        //console.log('aircraft', ac)
+    handler.addListener('aircraft_new', (ac)=>{
+        console.log('new aircraft', ac)
     })
 
-    handler.addListener('aircraft_with_location', (ac)=>{
-        console.log('aircraft with location', ac)
+    handler.addListener('aircraft_update_with_location', (ac)=>{
+        console.log('updated aircraft location', ac)
     })
 
     handler.addListener('warning', (w)=>{
