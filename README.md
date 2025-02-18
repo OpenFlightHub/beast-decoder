@@ -51,6 +51,12 @@ socket.connect({
 socket.on('data', data =>{
     handler.handleBeastData(data)
 })
+
+
+socket.on('close', ()=>{
+    handler.stop()
+})
+
 ```
 
 ## Dependencies

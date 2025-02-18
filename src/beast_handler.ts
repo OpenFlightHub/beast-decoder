@@ -43,13 +43,22 @@ const MAX_AIRCRAFT_CACHE_TIME = 1000 * 60 * 30 // 30 minutes
 export class BeastHandler extends EventManager<BeastHandlerEvents> {
 
     private readonly aircraftCache = new Map<AircraftIcaoAddress, AircraftCacheData>()
+    private cleanUpCacheInterval: NodeJS.Timeout
 
+    /**
+     * don't forget to call stop() once you are done
+     */
     constructor(){
         super()
 
-        setInterval(()=>{
+        this.cleanUpCacheInterval = setInterval(()=>{
             this.cleanUpCache()
         }, 1000 * 30)
+    }
+
+    stop(){
+        clearInterval(this.cleanUpCacheInterval)
+        this.aircraftCache.clear()
     }
 
     //TODO rewrite to be non-blocking
