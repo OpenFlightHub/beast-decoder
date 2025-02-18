@@ -37,6 +37,6 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
-    "mode-s-adsb-parser": "^0.2.0"
+    "mode-s-adsb-parser": "^0.3.2"
   }
 }

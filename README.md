@@ -1,8 +1,13 @@
-# ADSB ModeS Beast Parser
+# Beast Decoder
 Parses messages coming from a BEAST TCP port. For example out.adsb.lol:1337 [adsb.lol](https://www.adsb.lol/docs/overview/introduction/)
 
-### Dependencies
-* none
+**Currently supported:**
+* Mode S
+* ADSB (ModeS Extended Squitter)
+* DEBUG
+
+**Not yet supported:**
+* Mode AC
 
 ## Usage
 
@@ -13,18 +18,39 @@ npm i --save beast-decoder
 
 
 ```typescript
-TODO
 
-// parsing does minimal work and just makes sure the structure is correct
-parse()
+import { parseADSB, ADSB_ParsedMessage, parseModeS, ModeS_ParsedMessage } from 'beast-decoder'
+import net from 'net'
 
-// decodeLocation will only decode the location part of the message (so you can tell wether this is an interesting packet for you, and you want to fully decode it)
-decodeLocation()
+const socket: new net.Socket()
+socket.connect({
+    port: 1337,
+    host: 'out.adsb.lol',
+    family: 4 // force ipv4
+})
 
+socket.on('data', data =>{
 
-// fully decodes the message into values that is human readable, self explanatory and uses real world units
-decode()
+    const frames = parseBeastSocketData(data)
+
+    for(const frame of frames){
+        if(frame.format === 'ADSB'){
+
+            // parsing does minimal work and just makes sure the structure is correct
+            const parsedAdsbMessage = parseADSB(frame.dataBytes)
+
+            // decoding only location, to keep required work small
+            const decodedLocation = decodeLocation(parsedAdsbMessage)
+
+            // if location is in our area of interest, decode the full message (into a human readable, descriptive format that uses real world units)
+            const fullyDecoded = decode(parsedAdsbMessage, decodedLocation) // we can supply the already decoded location to minimize the work
+        }
+    }
+})
 ```
+
+## Dependencies
+* none
 
 ## Changelog
 

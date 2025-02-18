@@ -10,10 +10,10 @@ type BeastBinaryFrame<T extends BeastBinaryFrameFormat> = {
     bytes: Byte[]
 }
 
-export type BeastParsedFrameType = BeastParsedFrameType_Mode_AC | BeastParsedFrameType_Mode_S_Short | BeastParsedFrameType_Mode_S_Long | BeastParsedFrameType_Debug
+export type BeastParsedFrameType = BeastParsedFrameType_Mode_AC | BeastParsedFrameType_Mode_S | BeastParsedFrameType_ADSB | BeastParsedFrameType_Debug
 type BeastParsedFrameType_Mode_AC = 'MODE_AC'
-type BeastParsedFrameType_Mode_S_Short = 'MODE_S_SHORT'
-type BeastParsedFrameType_Mode_S_Long = 'MODE_S_LONG'
+type BeastParsedFrameType_Mode_S = 'MODE_S'
+type BeastParsedFrameType_ADSB = 'ADSB'
 type BeastParsedFrameType_Debug = 'DEBUG'
 
 export type BeastParsedFrame<T extends BeastParsedFrameType> = {
@@ -47,8 +47,8 @@ export function parseBeastSocketData(data: Buffer<ArrayBufferLike>, ignoreInvali
 const ESCAPE_BYTE = 0x1a
 
 const BEAST_BINARY_FRAME_FORMAT_MODE_AC: BeastBinaryFrameFormat_Mode_AC = 0x31
-const BEAST_BINARY_FRAME_FORMAT_MODE_S_SHORT: BeastBinaryFrameFormat_Mode_S_Short = 0x32
-const BEAST_BINARY_FRAME_FORMAT_MODE_S_LONG: BeastBinaryFrameFormat_Mode_S_Long = 0x33
+const BEAST_BINARY_FRAME_FORMAT_MODE_S_SHORT: BeastBinaryFrameFormat_Mode_S = 0x32
+const BEAST_BINARY_FRAME_FORMAT_MODE_S_LONG: BeastBinaryFrameFormat_ADSB = 0x33
 const BEAST_BINARY_FRAME_FORMAT_DEBUG: BeastBinaryFrameFormat_Debug = 0x34
 
 // just the content, no escape bytes, no frame format bytes
@@ -59,16 +59,16 @@ const BEAST_BINARY_FRAME_CONTENT_LENGTHS: Record<BeastBinaryFrameFormat, number>
     0x34: 6 + 1 + 1 //TODO is this correct? documentation is unclear https://wiki.jetvision.de/wiki/Mode-S_Beast:Data_Output_Formats
 }
 
-type BeastBinaryFrameFormat = BeastBinaryFrameFormat_Mode_AC | BeastBinaryFrameFormat_Mode_S_Short | BeastBinaryFrameFormat_Mode_S_Long | BeastBinaryFrameFormat_Debug
+type BeastBinaryFrameFormat = BeastBinaryFrameFormat_Mode_AC | BeastBinaryFrameFormat_Mode_S | BeastBinaryFrameFormat_ADSB | BeastBinaryFrameFormat_Debug
 type BeastBinaryFrameFormat_Mode_AC = 0x31
-type BeastBinaryFrameFormat_Mode_S_Short = 0x32
-type BeastBinaryFrameFormat_Mode_S_Long = 0x33
+type BeastBinaryFrameFormat_Mode_S = 0x32
+type BeastBinaryFrameFormat_ADSB = 0x33
 type BeastBinaryFrameFormat_Debug = 0x34
 
 const BEAST_BINARY_FRAME_TYPES: Record<BeastBinaryFrameFormat, BeastParsedFrameType> = {
     '49': 'MODE_AC',
-    '50': 'MODE_S_SHORT',
-    '51': 'MODE_S_LONG',
+    '50': 'MODE_S',
+    '51': 'ADSB',
     '52': 'DEBUG'
 }
 
